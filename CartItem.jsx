@@ -1,53 +1,28 @@
-import { useDispatch, useSelector } from "react-redux";
-import { removeItem, updateQuantity } from "./CartSlice";
-import { Link } from "react-router-dom";
+import React from "react";
 
 const CartItem = () => {
-  const dispatch = useDispatch();
-  const cartItems = useSelector(state => state.cart.cartItems);
-
-  const totalAmount = cartItems.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  );
-
   return (
     <div>
-      <nav>
-        <Link to="/">Home</Link> |{" "}
-        <Link to="/plants">Plants</Link> |{" "}
-        <Link to="/cart">Cart</Link>
-      </nav>
-
       <h2>Shopping Cart</h2>
 
-      {cartItems.map(item => (
-        <div key={item.id}>
-          <h4>{item.name}</h4>
-          <p>Unit Price: ${item.price}</p>
-          <p>Total: ${item.price * item.quantity}</p>
+      <div className="cart-item">
+        <img src="plant1.jpg" alt="Monstera" />
+        <h4>Monstera</h4>
+        <p>Unit Price: $20</p>
+        <p>Total: $40</p>
 
-          <button onClick={() =>
-            dispatch(updateQuantity({ id: item.id, quantity: item.quantity - 1 }))
-          }>-</button>
+        <button>-</button>
+        <span>2</span>
+        <button>+</button>
 
-          <span>{item.quantity}</span>
+        <button>Remove</button>
+      </div>
 
-          <button onClick={() =>
-            dispatch(updateQuantity({ id: item.id, quantity: item.quantity + 1 }))
-          }>+</button>
-
-          <button onClick={() => dispatch(removeItem(item.id))}>
-            Remove
-          </button>
-        </div>
-      ))}
-
-      <h3>Total Cart Amount: ${totalAmount}</h3>
+      <h3>Total Cart Amount: $40</h3>
 
       <button>Checkout (Coming Soon)</button>
       <br />
-      <Link to="/plants">Continue Shopping</Link>
+      <button>Continue Shopping</button>
     </div>
   );
 };
