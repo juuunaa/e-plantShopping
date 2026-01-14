@@ -1,12 +1,12 @@
 import { useDispatch, useSelector } from "react-redux";
-import { increaseQty, decreaseQty, removeFromCart } from "./CartSlice";
+import { removeItem, updateQuantity } from "./CartSlice";
 import { Link } from "react-router-dom";
 
 const CartItem = () => {
   const dispatch = useDispatch();
-  const items = useSelector(state => state.cart.items);
+  const cartItems = useSelector(state => state.cart.cartItems);
 
-  const total = items.reduce(
+  const totalAmount = cartItems.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0
   );
@@ -14,35 +14,40 @@ const CartItem = () => {
   return (
     <div>
       <nav>
-        <Link to="/">Beranda</Link> |{" "}
-        <Link to="/products">Tanaman</Link> |{" "}
-        <Link to="/cart">Keranjang</Link>
+        <Link to="/">Home</Link> |{" "}
+        <Link to="/plants">Plants</Link> |{" "}
+        <Link to="/cart">Cart</Link>
       </nav>
 
-      <h2>Keranjang Belanja</h2>
+      <h2>Shopping Cart</h2>
 
-      {items.map(item => (
+      {cartItems.map(item => (
         <div key={item.id}>
-          <img src={item.img} width="100" />
           <h4>{item.name}</h4>
-          <p>Harga: Rp {item.price}</p>
-          <p>Total: Rp {item.price * item.quantity}</p>
+          <p>Unit Price: ${item.price}</p>
+          <p>Total: ${item.price * item.quantity}</p>
 
-          <button onClick={() => dispatch(decreaseQty(item.id))}>-</button>
+          <button onClick={() =>
+            dispatch(updateQuantity({ id: item.id, quantity: item.quantity - 1 }))
+          }>-</button>
+
           <span>{item.quantity}</span>
-          <button onClick={() => dispatch(increaseQty(item.id))}>+</button>
 
-          <button onClick={() => dispatch(removeFromCart(item.id))}>
-            Hapus
+          <button onClick={() =>
+            dispatch(updateQuantity({ id: item.id, quantity: item.quantity + 1 }))
+          }>+</button>
+
+          <button onClick={() => dispatch(removeItem(item.id))}>
+            Remove
           </button>
         </div>
       ))}
 
-      <h3>Total Keranjang: Rp {total}</h3>
+      <h3>Total Cart Amount: ${totalAmount}</h3>
 
-      <button>Checkout (Segera Hadir)</button>
+      <button>Checkout (Coming Soon)</button>
       <br />
-      <Link to="/products">Lanjutkan Berbelanja</Link>
+      <Link to="/plants">Continue Shopping</Link>
     </div>
   );
 };
